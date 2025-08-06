@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dominos – Subscribe</title>
+    <style>
+      :root {
+        --primary: #facc15;
+        --dark: #111;
+        --light: #fff;
+        --text-muted: #ccc;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: sans-serif;
+        background: var(--dark);
+        color: var(--light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        padding: 20px;
+        overflow: hidden;
+        text-align: center;
+      }
+      .card {
+        max-width: 360px;
+        width: 100%;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+      }
+      h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+      }
+      p {
+        font-size: 1rem;
+        color: var(--text-muted);
+        margin-bottom: 25px;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary);
+        color: #000;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .lang-switch {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: 1px solid var(--light);
+        color: var(--light);
+        padding: 6px 12px;
+        cursor: pointer;
+        width: 100px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="lang-switch" id="langBtn">ع‎/‎EN</button>
+    <div class="card">
+      <h1 id="title">Dominos – Enter your phone</h1>
+      <p id="subtitle">Enter your mobile number to start playing now</p>
+      <form id="phone-form">
+        <input
+          type="tel"
+          id="phone-input"
+          placeholder="966XXXXXXXXX"
+          required
+        />
+        <button type="submit" id="submit-btn" disabled>Subscribe</button>
+      </form>
+      <p
+        id="disclaimer"
+        style="font-size: 0.8rem; color: var(--text-muted); margin-top: 15px"
+      >
+        New subscribers get one free day. Subscription: 240 IQD/day. Send D5 to
+        3368 to cancel.
+      </p>
+    </div>
+
+    <script>
+      const texts = {
+        en: {
+          title: "Dominos – Enter your phone",
+          subtitle: "Enter your mobile number to start playing now",
+          button: "Subscribe",
+          disclaimer:
+            "New subscribers get one free day. Subscription: 240 IQD/day. Send D5 to 3368 to cancel.",
+        },
+        ar: {
+          title: "Dominos – أدخل رقم هاتفك",
+          subtitle: "أدخل رقم جوالك لتبدأ اللعب الآن",
+          button: "الاشتراك",
+          disclaimer:
+            "المشتركين الجدد يحصلون على يوم مجاني. الاشتراك: ٢٤٠ دينار يوميًا. للإلغاء: أرسل D5 إلى 3368.",
+        },
+      };
+      let lang = "en";
+      const switchBtn = document.getElementById("langBtn");
+      switchBtn.addEventListener("click", () => {
+        lang = lang === "en" ? "ar" : "en";
+        updateLanguage();
+      });
+      function updateLanguage() {
+        const t = texts[lang];
+        document.getElementById("title").textContent = t.title;
+        document.getElementById("subtitle").textContent = t.subtitle;
+        document.getElementById("submit-btn").textContent = t.button;
+        document.getElementById("disclaimer").textContent = t.disclaimer;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+      }
+      updateLanguage();
+
+      const phoneInput = document.getElementById("phone-input");
+      const submitBtn = document.getElementById("submit-btn");
+      phoneInput.addEventListener("input", () => {
+        submitBtn.disabled = phoneInput.value.trim().length < 10;
+      });
+
+      document.getElementById("phone-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const phone = phoneInput.value.trim();
+        const params = new URLSearchParams(window.location.search);
+        const trafficsource = params.get("trafficsource") || "";
+        const parameter = params.get("parameter") || "";
+        localStorage.setItem("trafficsource", trafficsource);
+        localStorage.setItem("parameter", parameter);
+        // call antifraud and subscribe logic here same as scriptlibya
+        window.location.href = `otp.html?phone=${phone}&trafficsource=${trafficsource}&parameter=${parameter}`;
+      });
+    </script>
+  </body>
+</html>
